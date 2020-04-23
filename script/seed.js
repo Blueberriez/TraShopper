@@ -173,11 +173,16 @@ async function seed() {
 
   //second order/cart
   // await orders[1].addProducts([products[3],[products[12], [products[1]])
-  await orders[1].addProducts([products[2], products[4], products[1]])
+  const order = await orders[1].addProduct(products[1])
+  await orders[1].addProduct(products[3])
   await orders[1].setUser(users[1])
+  console.log(order)
+  order[0].quantity = 5
+  await order[0].save()
 
+  console.log(products[1])
   orders[1].totalPrice =
-    products[2].price + products[4].price + products[1].price
+    products[1].price * order[0].quantity + products[3].price
   await orders[1].save()
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
