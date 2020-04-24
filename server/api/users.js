@@ -56,7 +56,16 @@ router.put('/:userId/cart', async (req, res, next) => {
     })
 
     const foundProduct = await Product.findByPk(req.body.id)
-    await getCart.addProduct(foundProduct)
+    const add = await getCart.addProduct(foundProduct)
+    if (add === undefined) {
+      getCart.products.forEach(async (product, i) => {
+        if (product.id === foundProduct.id) {
+          console.log('FOUND A MATCH')
+          product.itemsInOrder.quantity = product.itemsInOrder.quantity + 1
+          await getCart.products[i].itemsInOrder.save()
+        }
+      })
+    }
     getCart.totalPrice = getCart.totalPrice + foundProduct.price
     await getCart.save()
     const newCart = await Order.findOne({
@@ -87,7 +96,8 @@ router.put('/:userId/cart-remove/', async (req, res, next) => {
       }
     })
     const foundProduct = await Product.findByPk(req.body.id)
-    await getCart.removeProduct(foundProduct)
+    const removed = await getCart.removeProduct(foundProduct)
+    console.log('REMOVED:', removed)
     getCart.totalPrice = getCart.totalPrice - foundProduct.price
     getCart.save()
     res.json(getCart)

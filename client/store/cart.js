@@ -5,6 +5,7 @@ const SET_CART = 'SET_CART'
 const ADD_TO_CART = 'ADD_TO_CART'
 const CHECKOUT = 'CHECKOUT'
 const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
+const UPDATE_PRICE = 'UPDATE_PRICE'
 
 export const setCart = (cart, price) => ({
   type: SET_CART,
@@ -26,6 +27,11 @@ export const checkout = () => ({
   type: CHECKOUT
 })
 
+export const updatePrice = price => ({
+  type: UPDATE_PRICE,
+  price
+})
+
 export const addProductToCart = (productId, userId = 0) => {
   return async dispatch => {
     try {
@@ -36,8 +42,8 @@ export const addProductToCart = (productId, userId = 0) => {
           await axios.post(`/api/users/${userId}/cart`)
           dispatch(setCart([], 0))
         }
-
         await axios.put(`/api/users/${userId}/cart`, foundProduct.data)
+
         dispatch(addToCart(foundProduct.data))
       } else {
         dispatch(addToCart(foundProduct.data))
@@ -118,7 +124,14 @@ export default function cartReducer(state = initialState, action) {
     }
     case ADD_TO_CART: {
       const newPrice = state.price + action.product.price
-      return {...state, cart: [...state.cart, action.product], price: newPrice}
+      if (state.cart.includes(action.product))
+        return {...state, price: newPrice}
+      else
+        return {
+          ...state,
+          cart: [...state.cart, action.product],
+          price: newPrice
+        }
     }
     case REMOVE_FROM_CART: {
       const newPrice = state.price - action.product.price
@@ -131,6 +144,10 @@ export default function cartReducer(state = initialState, action) {
     }
     case CHECKOUT: {
       return initialState
+    }
+    case UPDATE_PRICE: {
+      const newPrice = state.price + action.price
+      return {...state, price: newPrice}
     }
     default:
       return state
