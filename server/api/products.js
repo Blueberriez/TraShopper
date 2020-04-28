@@ -10,20 +10,25 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.get('/art', async (req, res, next) => {
   try {
-    const user = await User.findOne({
-      where: {
-        email: `${req.user.email}`,
-        id: `${req.user.id}`
-      }
+    const products = await Product.findAll({
+      where: {category: 'trash'}
     })
-    if (req.user.isAdmin) {
-      const newProduct = await Product.create(req.body)
-      res.json(newProduct).status(202)
-    }
-  } catch (error) {
-    next(error)
+    res.json(products)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/islands', async (req, res, next) => {
+  try {
+    const products = await Product.findAll({
+      where: {category: 'island'}
+    })
+    res.json(products)
+  } catch (err) {
+    next(err)
   }
 })
 
@@ -36,20 +41,29 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+//admin routes
+router.post('/', async (req, res, next) => {
+  try {
+    if (req.user.isAdmin) {
+      const newProduct = await Product.create(req.body)
+      res.json(newProduct).status(202)
+    } else {
+      throw new Error('Error accessing product')
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.put('/:id', async (req, res, next) => {
   try {
-    const user = await User.findOne({
-      where: {
-        email: `${req.user.email}`,
-        id: `${req.user.id}`
-      }
-    })
-    console.log('USER>>>', user)
-    if (user.isAdmin) {
+    if (req.user.isAdmin) {
       const product = await Product.findByPk(req.params.id)
       await product.update(req.body)
       res.sendStatus(202)
       // res.json(product)
+    } else {
+      throw new Error('Error accessing product')
     }
   } catch (error) {
     next(error)
@@ -58,21 +72,16 @@ router.put('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    const user = await User.findOne({
-      where: {
-        email: `${req.user.email}`,
-        id: `${req.user.id}`
-      }
-    })
-    if (user.isAdmin) {
+    if (req.user.isAdmin) {
       await Product.destroy({
         where: {
           id: req.params.id
         }
       })
+      res.send('Product successfully deleted').status(204)
+    } else {
+      throw new Error('Error deleting product')
     }
-    // res.status(204).end()
-    res.send('Product successfully deleted').status(204)
   } catch (error) {
     next(error)
   }

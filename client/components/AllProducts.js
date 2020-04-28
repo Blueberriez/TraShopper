@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {fetchProducts} from '../store/products'
+import {fetchProducts, fetchSomeProducts} from '../store/products'
 import EditProduct from './EditProduct'
 // Import Store Thunks
 
@@ -14,7 +14,12 @@ export class AllProducts extends React.Component {
     }
   }
   componentDidMount() {
-    this.props.getProducts()
+    // if (this.props.category) {
+    console.log('props in compdidmount', this.props)
+    this.props.getSomeProducts(this.props.category)
+    // } else {
+    //   this.props.getProducts()
+    // }
   }
   displayEditForm() {
     let currentBool = this.state.displayEdit
@@ -53,6 +58,7 @@ export class AllProducts extends React.Component {
 
 const mapState = state => {
   return {
+    category: null,
     products: state.products,
     isAdmin: state.user.isAdmin,
     displayEdit: false
@@ -63,6 +69,9 @@ const mapDispatch = dispatch => {
   return {
     getProducts: function() {
       dispatch(fetchProducts())
+    },
+    getSomeProducts: function(category) {
+      dispatch(fetchSomeProducts(category))
     }
   }
 }

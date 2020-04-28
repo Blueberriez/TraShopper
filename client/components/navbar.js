@@ -11,6 +11,8 @@ const Navbar = ({handleClick, isLoggedIn}) => (
         <div id="nav-bar-cont-left">
           <h1>TraShopper</h1>
           <Link to="/products">All Products</Link>
+          <Link to="/products/art">Art</Link>
+          <Link to="/products/islands">Islands</Link>
           <Link to="/cart">Cart</Link>
         </div>
         {isLoggedIn ? (

@@ -68,21 +68,6 @@ export class EditProduct extends React.Component {
     console.log(this.state)
     return (
       <form onSubmit={this.handleSubmit}>
-        {/* <label>Category:
-          <textarea value={this.state.category} onChange={this.handleChange} />
-        </label>
-        <label>Name:
-          <textarea value={this.state.name} onChange={this.handleChange} />
-        </label>
-        <label>Image Url:
-          <textarea value={this.state.imageUrl} onChange={this.handleChange} />
-        </label>
-        <label>Description:
-          <textarea value={this.state.description} onChange={this.handleChange} />
-        </label>
-        <label>Price:
-          <textarea value={this.state.price} onChange={this.handleChange} />
-        </label> */}
         <label htmlFor="category">Category</label>
         <input
           name="category"

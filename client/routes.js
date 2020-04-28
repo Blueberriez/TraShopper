@@ -29,6 +29,16 @@ class Routes extends Component {
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route exact path="/products" component={AllProducts} />
+
+          <Route
+            path="/products/art"
+            render={props => <AllProducts {...props} category="art" />}
+          />
+          <Route
+            path="/products/islands"
+            render={() => <AllProducts category="islands" />}
+          />
+
           <Route
             path="/products/:productId"
             component={SingleProduct}
@@ -51,7 +61,7 @@ class Routes extends Component {
           {/* Displays our Login component as a fallback */}
           <Route component={Login} />
         </Switch>
-       </div>
+      </div>
     )
   }
 }
