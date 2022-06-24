@@ -47,7 +47,7 @@
     "express": "^4.16.4",
     "express-session": "^1.15.1",
     "history": "^4.9.0",
-    "jsdom": "^16.2.2",
+    "jsdom": "^16.5.0",
     "mdbreact": "^4.25.6",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
